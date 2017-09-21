@@ -1,5 +1,6 @@
 
 import numpy as np
+import math
 
 class Corpus:
 	def __init__(self, labels, tokens):
@@ -32,7 +33,9 @@ class Corpus:
 		for i in xrange(len(self.vocabulary)):
 			w = self.vocabulary[i]
 
-			X[i] = tokens.count(w)
+			if(w in tokens):
+				X[i] = 1
+			#X[i] = tokens.count(w)
 
 		return np.array(X)
 
@@ -41,13 +44,15 @@ class Corpus:
 		M = np.array(self.matrix)
 		class_index = self.classes.index(label)
 
-		prior = np.divide(self.class_count, float(self.N))
+		prior = self.class_count[class_index] / float(self.N)
 
-		c = M[:, class_index]
-		t = np.sum(M, axis=1)
-		t = np.asfarray(t)
-		W = np.divide(c, t)
-		W = np.append(W, prior[class_index])
+		c = M[:, class_index] 				# Occurence count in class for each word. Large column vector
+		c = np.add(c, 1)					# Laplace Smoothing
+		c_sum = np.sum(c) 					# Total word occurances in class
+
+		W = np.divide(c, float(c_sum))				# Propability
+		W = np.log(W) 						# Log Propability
+		W = np.append(W, math.log(prior)) 	# Add the prior to the end of the weight vector
 
 		return W
 

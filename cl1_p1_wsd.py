@@ -78,20 +78,20 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 
 	print('Examples: {0}'.format(len(train_labels)))
 
-	print(corpus.classes)
 	M = np.array(corpus.matrix)
 
 	w1 = corpus.vocabulary.index('time')
 	w2 = corpus.vocabulary.index('loss')
 	w3 = corpus.vocabulary.index('export')
 
-	print('c(s) {0}'.format(np.sum(M, axis=0)))
-	print('c(s) {0}'.format(corpus.class_count))
+	#print('c(s) {0}'.format(np.sum(M, axis=0)))
+	#print('c(s) {0}'.format(corpus.class_count))
 
 	print('c(s, time) {0}'.format(M[w1, :]))
 	print('c(s, loss) {0}'.format(M[w2, :]))
 	print('c(s, export) {0}'.format(M[w3, :]))
 
+	print(corpus.classes)
 	print('p(s) {0}'.format(np.divide(corpus.class_count, float(corpus.N))))
 	print('p(time) {0}'.format(np.sum(M[w1, :]) / float(np.sum(M))))
 	print('p(loss) {0}'.format(np.sum(M[w2, :]) / float(np.sum(M))))
@@ -110,8 +110,13 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 	W_4 = corpus.get_weights(corpus.classes[4]) #phone
 	W_5 = corpus.get_weights(corpus.classes[5]) #formation
 
-	for i in xrange(0, 20):
-		X = corpus.get_bow_vector(train_texts[i])
+	gold = []
+	pred = []
+	for i in xrange(0, len(test_texts)):
+		if(i % 100 == 0):
+			print(i)
+
+		X = corpus.get_bow_vector(test_texts[i])
 		X = np.append(X, 1)
 
 		score_xi_w0 = np.dot(X, W_0)
@@ -128,16 +133,11 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 		#print('score_X{0}_formation: {1}'.format(i, score_xi_w5))
 
 		pi = np.argmax([score_xi_w0, score_xi_w1, score_xi_w2, score_xi_w3, score_xi_w4, score_xi_w5])
-		print('Y{0}: {1}, Predict: {2}'.format(i, train_labels[i], corpus.classes[pi]))
+		#print('Y{0}: {1}, Predict: {2}'.format(i, train_labels[i], corpus.classes[pi]))
+		pred.append(corpus.classes[pi])
+		gold.append(test_labels[i])
 
-	#print('X_0 {0}'.format(X))
-	#print('W_cord {0}'.format(W) )
-
-
-	"""
-	**Your final classifier implementation of part 2 goes here**
-	"""
-	pass
+	return eval(gold, pred)
 
 """
 Trains a perceptron model with bag of words features and computes the accuracy on the test set
