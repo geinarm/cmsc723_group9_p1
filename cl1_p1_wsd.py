@@ -69,23 +69,17 @@ Trains a naive bayes model with bag of words features and computes the accuracy 
 train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 """
-from corpus import Corpus
+from naiveBayes import NaiveBayes
 import numpy as np
 def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-	
-	corpus = Corpus(train_labels, train_texts)
 
-	print('Examples: {0}'.format(len(train_labels)))
-
+	"""
 	M = np.array(corpus.matrix)
 
 	w1 = corpus.vocabulary.index('time')
 	w2 = corpus.vocabulary.index('loss')
 	w3 = corpus.vocabulary.index('export')
-
-	#print('c(s) {0}'.format(np.sum(M, axis=0)))
-	#print('c(s) {0}'.format(corpus.class_count))
 
 	print('c(s, time) {0}'.format(M[w1, :]))
 	print('c(s, loss) {0}'.format(M[w2, :]))
@@ -100,15 +94,9 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 	print('p(time | s) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
 	print('p(loss | s) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
 	print('p(export | s) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
+	"""
 
-	np.set_printoptions(threshold='nan')
-
-	W_0 = corpus.get_weights(corpus.classes[0]) #cord
-	W_1 = corpus.get_weights(corpus.classes[1]) #division
-	W_2 = corpus.get_weights(corpus.classes[2]) #product
-	W_3 = corpus.get_weights(corpus.classes[3]) #text
-	W_4 = corpus.get_weights(corpus.classes[4]) #phone
-	W_5 = corpus.get_weights(corpus.classes[5]) #formation
+	NB = NaiveBayes(train_labels, train_texts)
 
 	gold = []
 	pred = []
@@ -116,25 +104,8 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 		if(i % 100 == 0):
 			print(i)
 
-		X = corpus.get_bow_vector(test_texts[i])
-		X = np.append(X, 1)
-
-		score_xi_w0 = np.dot(X, W_0)
-		score_xi_w1 = np.dot(X, W_1)
-		score_xi_w2 = np.dot(X, W_2) 
-		score_xi_w3 = np.dot(X, W_3)
-		score_xi_w4 = np.dot(X, W_4)
-		score_xi_w5 = np.dot(X, W_5)
-		#print('score_X{0}_cord: {1}'.format(i, score_xi_w0))
-		#print('score_X{0}_division: {1}'.format(i, score_xi_w1))
-		#print('score_X{0}_product: {1}'.format(i, score_xi_w2))
-		#print('score_X{0}_text: {1}'.format(i, score_xi_w3))
-		#print('score_X{0}_phone: {1}'.format(i, score_xi_w4))
-		#print('score_X{0}_formation: {1}'.format(i, score_xi_w5))
-
-		pi = np.argmax([score_xi_w0, score_xi_w1, score_xi_w2, score_xi_w3, score_xi_w4, score_xi_w5])
-		#print('Y{0}: {1}, Predict: {2}'.format(i, train_labels[i], corpus.classes[pi]))
-		pred.append(corpus.classes[pi])
+		c = NB.classify(test_texts[i])
+		pred.append(c)
 		gold.append(test_labels[i])
 
 	return eval(gold, pred)

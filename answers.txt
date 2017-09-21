@@ -1,0 +1,116 @@
+Team: 
+1- Gudjon Magnusson
+2- Irina Yakubinskaya
+3-
+
+Email: 
+gudjon@terpmail.umd.edu
+irinya@terpmail.umd.edu
+---------------------------------------------------------------------------------
+Part 1)
+
+1- baseline accuracy = ?%
+2- Cohen’s Kappa = ?
+
+---------------------------------------------------------------------------------
+Part 2)
+1- 
+
+s   | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+c(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+c(s,time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+c(s,loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s          | cord | division   | formation | phone | product | text
+---------------------------------------------------------------------
+c(s,export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+
+2-
+
+s   | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s|time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s|loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s          | cord | division   | formation | phone | product | text
+---------------------------------------------------------------------
+p(s|export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+3- for the sentence X = "and i can tell you that i 'm an absolute nervous wreck every time she performs . i have her practice the last two lines on each page , so I can learn exactly when to turn the page -- just one of the tricks to this trade that i 've learned the hard way ."
+
+s     | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s|X)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+4- classifier f-measures on the test set:
+micro averaged = 0.804
+macro averaged = 0.701
+
+5- 
+The feature used is a binary vector with length equal to the size of the vocabulary. The ith entry is one if w_i is present in the sample X, zero otherwise.
+The probability p(s|w) is calculated by counting occurrences of words in that class. To avoid division by zero and smooth the results we add one to all counts.
+For each class we create a weight vector with length equal to the vocabulary plus one. The last entry is the prior for that class. All probabilities are transformed into log-space.
+To classify a new example we first generate the feature vector and the app end a one at the end so the length is |V|+1. We take the dot product of the feature vector with each of the weight vectors. The prediction is the class that corresponds to the weight vector that gives the highest response.
+---------------------------------------------------------------------------------
+Part 3)
+
+1- 
+2- comma separated accuracies (e.g. 30,35,60): 
+3- classifier f-measures on the test set:
+micro averaged = 
+macro averaged = 
+4- 
+---------------------------------------------------------------------------------
+Part 4)
+A) Feature A:
+
+1- Description
+
+2- naive-bayes f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+3- perceptron f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+
+4- Conclusions:
+
+B) Feature B:
+
+1- Description
+
+2- naive-bayes f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+3- perceptron f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+
+4- Conclusions:
+
+
