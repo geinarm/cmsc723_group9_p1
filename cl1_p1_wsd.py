@@ -117,8 +117,30 @@ train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 
 """
+from perceptron import Perceptron
+import numpy as np
 def run_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
+	
+	percept = Perceptron(train_texts, train_labels)
+
+	percept.train(train_texts, train_labels)
+
+	gold = []
+	pred = []
+	for i in xrange(0, len(test_texts)):
+		if(i % 100 == 0):
+			print(i)
+
+		X = percept.get_bow_feature(test_texts[i])
+		c = percept.predict(X)
+		pred.append(c)
+		gold.append(test_labels[i])
+
+		#print("{0} : {1}".format(pred[i], gold[i]))
+
+	return eval(gold, pred)
+
 	"""
 	**Your final classifier implementation of part 3 goes here**
 	"""
@@ -190,7 +212,10 @@ if __name__ == "__main__":
     #test_scores = run_naivebayes_classifier(train_texts, train_targets, train_labels, 
 	#			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
-    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
-				dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+    #test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
+	#			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+
+    test_scores = run_bow_perceptron_classifier(train_texts, train_targets, train_labels, 
+			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
     print test_scores
