@@ -74,29 +74,8 @@ import numpy as np
 def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 
-	"""
-	M = np.array(corpus.matrix)
-
-	w1 = corpus.vocabulary.index('time')
-	w2 = corpus.vocabulary.index('loss')
-	w3 = corpus.vocabulary.index('export')
-
-	print('c(s, time) {0}'.format(M[w1, :]))
-	print('c(s, loss) {0}'.format(M[w2, :]))
-	print('c(s, export) {0}'.format(M[w3, :]))
-
-	print(corpus.classes)
-	print('p(s) {0}'.format(np.divide(corpus.class_count, float(corpus.N))))
-	print('p(time) {0}'.format(np.sum(M[w1, :]) / float(np.sum(M))))
-	print('p(loss) {0}'.format(np.sum(M[w2, :]) / float(np.sum(M))))
-	print('p(export) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
-
-	print('p(time | s) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
-	print('p(loss | s) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
-	print('p(export | s) {0}'.format(np.sum(M[w3, :]) / float(np.sum(M))))
-	"""
-
-	NB = NaiveBayes(train_labels, train_texts)
+	NB = NaiveBayes(train_texts, train_labels)
+	NB.train(train_texts, train_labels)
 
 	gold = []
 	pred = []
@@ -118,12 +97,17 @@ The same thing applies to the reset of the parameters.
 
 """
 from perceptron import Perceptron
+from bowfeature import BOWFeature
+from pcafeature import PCAFeature
 import numpy as np
 def run_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 	
-	percept = Perceptron(train_texts, train_labels)
+	#bow = BOWFeature(train_texts, train_labels)
+	pca = PCAFeature(train_texts, train_labels, 500)
+	classes = list(set(train_labels))
 
+	percept = Perceptron(pca, classes)
 	percept.train(train_texts, train_labels)
 
 	gold = []
@@ -133,8 +117,7 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 		if(i % 300 == 0):
 			print("{0:.2f}%".format(100 * (i/float(len(test_texts)))))
 
-		X = percept.get_bow_feature(test_texts[i])
-		c = percept.predict(X)
+		c = percept.predict(test_texts[i])
 		pred.append(c)
 		gold.append(test_labels[i])
 	print("Classification Done")

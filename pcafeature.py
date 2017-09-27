@@ -10,34 +10,48 @@ class PCAFeature():
 		self.bow = BOWFeature(train_x, train_y)
 
 		X = self.bow.get_features(train_x)
-		X = np.asfarry(X)
+		X = np.asfarray(X)
 		
 		## Subtract the mean to center data at the origin
 		Mu = np.mean(X, 0)
 		X = X - Mu
 
 		## Singular Value Decompisition
+		print('Do SVD')
 		U, s, V = np.linalg.svd(X, full_matrices=False)
+		print('SVD Done')
 
 		## Save eignen vectors. Used later to project into new feature space
 		self.V = V
 
 
+	def size(self):
+		return self.k+1  # plus one for the bias
+
+
 	def get_feature(self, ex):
 
-		x = self.bow.get_feature(ex)
+		x = self.bow.get_feature(ex, binary=True)
 		x_ = np.dot(self.V, x)
 		x_ = np.dot(self.V, x.transpose()).transpose()
 
-		return x_[0:self.k]
+		x_ = x_[0:self.k]
+		x_ = np.append(x_, [1])
+
+		return x_
 
 
 	def get_features(self, examples):
-		X = self.bow.get_features(examples)
+		n = len(examples)
+
+		X = self.bow.get_features(examples, binary=True)
 		X_ = np.dot(self.V, X)
 		X_ = np.dot(self.V, X.transpose()).transpose()
 
-		return X_[0:self.k]
+		X_ = X_[:, 0:self.k]
+		X_ = np.append(X_, [[1]*n], axis=1)
+
+		return X_
 
 
 import cl1_p1_wsd as cl1

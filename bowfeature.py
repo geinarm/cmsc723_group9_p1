@@ -1,6 +1,8 @@
 
 import numpy as np
 
+import time
+
 class BOWFeature():
 	def __init__(self, train_x, train_y):
 
@@ -16,24 +18,30 @@ class BOWFeature():
 			self.vocab_dict[w] = i
 
 
-	def get_bow_feature(self, tokens):
+	def size(self):
+		return len(self.vocab) + 1 		# plus one for the bias
+
+	def get_feature(self, example, binary=False):
 		X = ([0] * self.K)+[1]
 
-		for w in tokens:
+		for w in example:
 			if(w in self.vocab_dict):
 				i = self.vocab_dict[w]
-				X[i] = 1
+				X[i] += 1
+
+		if(binary):
+			X = np.clip(X, 0, 1)
 
 		return np.array(X)
 
 
 	## Returns a matrix where the i-th row is the feature vector 
 	## corresponding to the i-th example in the list
-	def get_bow_features(self, Examples):
+	def get_features(self, examples, binary=False):
 		M = []
 
-		for e in Examples:
-			x = self.get_bow_feature(e)
+		for e in examples:
+			x = self.get_feature(e, binary)
 			M.append(x)
 
 		return np.array(M)
