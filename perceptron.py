@@ -4,7 +4,7 @@ import numpy as np
 class Perceptron:
 	def __init__(self, train_x, train_y):
 
-
+		
 		self.classes = list(set(train_y))
 		self.num_classes = len(self.classes)
 		self.class_count = [0]*self.num_classes

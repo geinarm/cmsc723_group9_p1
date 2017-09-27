@@ -128,24 +128,18 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 
 	gold = []
 	pred = []
+	print("Classify test set:")
 	for i in xrange(0, len(test_texts)):
-		if(i % 100 == 0):
-			print(i)
+		if(i % 300 == 0):
+			print("{0:.2f}%".format(100 * (i/float(len(test_texts)))))
 
 		X = percept.get_bow_feature(test_texts[i])
 		c = percept.predict(X)
 		pred.append(c)
 		gold.append(test_labels[i])
-
-		#print("{0} : {1}".format(pred[i], gold[i]))
+	print("Classification Done")
 
 	return eval(gold, pred)
-
-	"""
-	**Your final classifier implementation of part 3 goes here**
-	"""
-	pass
-
 
 
 """

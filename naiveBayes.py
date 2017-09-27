@@ -54,6 +54,7 @@ class NaiveBayes:
 		for i in xrange(len(self.vocabulary)):
 			w = self.vocabulary[i]
 
+			#X[i] = tokens.count(w)
 			if(w in tokens):
 				X[i] = 1
 
