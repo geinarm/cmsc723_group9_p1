@@ -8,6 +8,10 @@ class Perceptron:
 		self.feature_function = feature #BOWFeature(train_x, train_y)
 		self.classes = classes #list(set(train_y))
 
+		## Hack
+		if self.feature_function.__class__.__name__ == 'BOWFeature':
+			self.feature_function.binary = True
+
 
 	def train(self, train_x, train_y):
 		print("Start Training:")
@@ -18,40 +22,34 @@ class Perceptron:
 		self.weights = np.asfarray(self.weights)
 		weights_sum = self.weights.copy()
 
-		for i in xrange(0, len(train_y)):
-			if(i % 300 == 0):
-				print("{0:.2f}%".format(100 * (i/float(len(train_y)))))
+		for j in xrange(0, 1):
+			print("Itteration {0}".format(j+1))
+			for i in xrange(0, len(train_y)):
+				if(i % 300 == 0):
+					print("{0:.2f}%".format(100 * (i/float(len(train_y)))))
 
-			example = train_x[i]
-			#X = self.get_bow_feature(tokens)
-			X = self.feature_function.get_feature(example)
-			#X = np.clip(X, 0, 1)
+				example = train_x[i]
+				X = self.feature_function.get_feature(example)
+				y = self.classes.index(train_y[i])
 
-			y = self.classes.index(train_y[i])
+				# Predict using current weights
+				plabel = self._predict(X)
+				py = self.classes.index(plabel)
 
-			# Predict using current weights
-			plabel = self._predict(X)
-			py = self.classes.index(plabel)
+				# Check if we got the correct answer
+				if(y != py):
+					# Update weights
+					self.weights[y] += X
+					self.weights[py] -= X
+					weights_sum += self.weights
 
-			# Check if we got the correct answer
-			if(y != py):
-				# Update weights
-				self.weights[y] += X
-				self.weights[py] -= X
-				weights_sum += self.weights
-
-			else:
-				# Nothing to do
-				pass
-
-		self.weights = weights_sum * 1.0/len(train_y)
+			self.weights = weights_sum * 1.0/len(train_y)
 
 		print("Training is Done")
 
 
 	def predict(self, example):
 		X = self.feature_function.get_feature(example)
-		#X = np.clip(X, 0, 1)
 
 		return self._predict(X)
 

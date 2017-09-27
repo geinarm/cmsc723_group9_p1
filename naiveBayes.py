@@ -58,6 +58,10 @@ class NaiveBayes:
 
 
 	def classify(self, example):
+		## Hack
+		if self.feature_function.__class__.__name__ == 'BOWFeature':
+			self.feature_function.binary = True
+
 		#X = self.get_bow_vector(tokens)
 		X = self.feature_function.get_feature(example)
 		X = np.clip(X, 0, 1)  ## binary feature. Ignore count

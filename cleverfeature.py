@@ -1,8 +1,8 @@
 
 import numpy as np
 
-class BOWFeature():
-	def __init__(self, train_x, train_y, binary=False):
+class CleverFeature():
+	def __init__(self, train_x, train_y):
 
 		self.classes = list(set(train_y))
 		self.vocab = list(set([item for l_ in train_x for item in l_]))

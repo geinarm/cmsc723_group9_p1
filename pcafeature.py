@@ -31,7 +31,7 @@ class PCAFeature():
 
 	def get_feature(self, ex):
 
-		x = self.bow.get_feature(ex, binary=True)
+		x = self.bow.get_feature(ex)
 		x_ = np.dot(self.V, x)
 		x_ = np.dot(self.V, x.transpose()).transpose()
 
@@ -44,7 +44,7 @@ class PCAFeature():
 	def get_features(self, examples):
 		n = len(examples)
 
-		X = self.bow.get_features(examples, binary=True)
+		X = self.bow.get_features(examples)
 		X_ = np.dot(self.V, X)
 		X_ = np.dot(self.V, X.transpose()).transpose()
 

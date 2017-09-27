@@ -103,11 +103,11 @@ import numpy as np
 def run_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 	
-	#bow = BOWFeature(train_texts, train_labels)
-	pca = PCAFeature(train_texts, train_labels, 500)
+	feature = BOWFeature(train_texts, train_labels)
+	#feature = PCAFeature(train_texts, train_labels, 500)
 	classes = list(set(train_labels))
 
-	percept = Perceptron(pca, classes)
+	percept = Perceptron(feature, classes)
 	percept.train(train_texts, train_labels)
 
 	gold = []
@@ -156,29 +156,6 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
 	pass
 
 
-def run_naivebayes_classifier(train_texts, train_targets,train_labels, 
-				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-	
-
-	labels = train_labels + dev_labels
-	num_labels = len(labels)
-	count_dict = {}
-
-	for w in labels:
-		if w in count_dict:
-			count_dict[w] = count_dict[w] +1
-		else:
-			count_dict[w] = 1
-
-	priors = []
-	print('Data Set Priors:')
-	for k,v in count_dict.items():
-		print('{0} : ({1}/{2}) {3}'.format(k, v, num_labels, float(v)/num_labels))
-		priors.append(float(v)/num_labels)
-
-	return max(priors)
-
-
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
     train_labels, train_targets, train_texts = read_dataset('train')
@@ -189,10 +166,10 @@ if __name__ == "__main__":
     #test_scores = run_naivebayes_classifier(train_texts, train_targets, train_labels, 
 	#			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
-    #test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
-	#			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
+				dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
-    test_scores = run_bow_perceptron_classifier(train_texts, train_targets, train_labels, 
-			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+    #test_scores = run_bow_perceptron_classifier(train_texts, train_targets, train_labels, 
+	#		dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
     print test_scores
