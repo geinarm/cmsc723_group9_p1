@@ -82,10 +82,9 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 
 	classes = list(set(train_labels))
 
-	feature = LeskFeature(classes)
-	#feature = BOWFeature(train_texts, train_labels)
+	#feature = LeskFeature(classes)
+	feature = BOWFeature(train_texts, train_labels)
 	#feature = PCAFeature(train_texts, train_labels, 500)
-	#feature = CleverFeature(train_texts, train_labels)
 
 	NB = NaiveBayes(feature, classes)
 	NB.train(train_texts, train_labels)
@@ -115,10 +114,71 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 	
 	classes = list(set(train_labels))
 
+	feature = BOWFeature(train_texts, train_labels)
+	percept = Perceptron(feature, classes)
+	percept.train(train_texts, train_labels)
+
+	gold = []
+	pred = []
+	print("Classify test set:")
+	for i in xrange(0, len(test_texts)):
+		if(i % 300 == 0):
+			print("{0:.2f}%".format(100 * (i/float(len(test_texts)))))
+
+		c = percept.predict(test_texts[i])
+		pred.append(c)
+		gold.append(test_labels[i])
+	print("Classification Done")
+
+	write_predictions(pred, 'q3p3.txt')
+
+	return eval(gold, pred)
+
+
+"""
+Trains a naive bayes model with bag of words features  + two additional features 
+and computes the accuracy on the test set
+
+train_texts, train_targets, train_labels are as described in read_dataset above
+The same thing applies to the reset of the parameters.
+
+"""
+def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels, 
+				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
+
+	classes = list(set(train_labels))
+
 	feature = LeskFeature(classes)
-	#feature = BOWFeature(train_texts, train_labels)
-	#feature = PCAFeature(train_texts, train_labels, 500)
-	#feature = CleverFeature(train_texts, train_labels)
+
+	NB = NaiveBayes(feature, classes)
+	NB.train(train_texts, train_labels)
+
+	gold = []
+	pred = []
+	for i in xrange(0, len(test_texts)):
+		if(i % 100 == 0):
+			print(i)
+
+		c = NB.classify(test_texts[i])
+		pred.append(c)
+		gold.append(test_labels[i])
+
+	return eval(gold, pred)
+
+"""
+Trains a perceptron model with bag of words features  + two additional features 
+and computes the accuracy on the test set
+
+train_texts, train_targets, train_labels are as described in read_dataset above
+The same thing applies to the reset of the parameters.
+
+"""
+def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
+				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
+
+	classes = list(set(train_labels))
+
+	feature = PCAFeature(train_texts, train_labels, 500)
 
 	percept = Perceptron(feature, classes)
 	percept.train(train_texts, train_labels)
@@ -136,37 +196,6 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 	print("Classification Done")
 
 	return eval(gold, pred)
-
-
-"""
-Trains a naive bayes model with bag of words features  + two additional features 
-and computes the accuracy on the test set
-
-train_texts, train_targets, train_labels are as described in read_dataset above
-The same thing applies to the reset of the parameters.
-
-"""
-def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels, 
-				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-	"""
-	**Your final implementation of Part 4 with perceptron classifier**
-	"""
-	pass
-
-"""
-Trains a perceptron model with bag of words features  + two additional features 
-and computes the accuracy on the test set
-
-train_texts, train_targets, train_labels are as described in read_dataset above
-The same thing applies to the reset of the parameters.
-
-"""
-def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
-				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-	"""
-	**Your final implementation of Part 4 with perceptron classifier**
-	"""
-	pass
 
 
 if __name__ == "__main__":

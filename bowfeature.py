@@ -14,6 +14,11 @@ class BOWFeature():
 			w = self.vocab[i]
 			self.vocab_dict[w] = i
 
+		## Q2 - 1
+		print("time: {0}".format(self.vocab.index('time')))
+		print("loss: {0}".format(self.vocab.index('loss')))
+		print("export: {0}".format(self.vocab.index('export')))
+
 
 	def size(self):
 		return len(self.vocab) + 1 		# plus one for the bias

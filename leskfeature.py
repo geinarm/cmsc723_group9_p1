@@ -21,8 +21,6 @@ class LeskFeature():
 				self.labels.append(label)
 				self.texts.append(text)
 
-
-		print(self.texts)
 		self.vocab = list(set([item for l_ in self.texts for item in l_]))
 
 		self.vocab_dict = {}

@@ -33,25 +33,33 @@ class NaiveBayes:
 
 			count_matrix[:, y] += x
 			
+
+		## Q2 - 1
+		print(self.classes)
+		#print(class_count)
+		print("C(Si | time) = {0}".format(count_matrix[994, :]))
+		print("C(s_i | loss) = {0}".format(count_matrix[7596, :]))
+		print("C(s_i | export) = {0}".format(count_matrix[159, :]))
 		count_matrix = np.delete(count_matrix, k-1, 0)	# remove count of bias element
 
-
-		print(count_matrix)
-
 		## Calculate probability
-		self.weights = []
-		for i in xrange(0, len(self.classes)):
-			prior = class_count[i] / float(n)
+		prior = np.array(class_count) / float(n)
 
-			c = count_matrix[:, i] 				# Occurence count in class i for each word. Large column vector
-			c = np.add(c, 1)					# Laplace Smoothing
-			c_sum = np.sum(c) 					# Total word occurances in class
+		count_matrix = count_matrix + 1
+		col_sum = np.sum(count_matrix, axis=0)
+		W = count_matrix / col_sum
+		W = np.vstack([W, prior])
 
-			W = np.divide(c, float(c_sum))		# Propability
-			W = np.log(W) 						# Log Propability
-			W = np.append(W, math.log(prior)) 	# Add the prior to the end of the weight vector
+		self.weights = W
 
-			self.weights.append(W)
+		## Q2 - 2
+		#print(self.classes)
+		#print(prior)
+		#print("P(Si | time) = {0}".format(self.weights[994, :]))
+		#print("P(s_i | loss) = {0}".format(self.weights[7596, :]))
+		#rint("P(s_i | export) = {0}".format(self.weights[159, :]))
+
+		self.weights = np.log(self.weights) 	# Log Propability
 
 
 	def classify(self, example):
@@ -61,14 +69,17 @@ class NaiveBayes:
 		elif self.feature_function.__class__.__name__ == 'LeskFeature':
 			self.feature_function.binary = True
 
-		#X = self.get_bow_vector(tokens)
 		X = self.feature_function.get_feature(example)
 		X = np.clip(X, 0, 1)  ## binary feature. Ignore count
 
 		score = [0] * len(self.classes)
 		for i in xrange(0, len(self.classes)):
-			W = self.weights[i]
+			W = self.weights[:, i]
 			score[i] = np.dot(X, W)
+
+		##Q2 - 3
+		#print(self.classes)
+		#print(score)
 
 		pi = np.argmax(score)
 		return self.classes[pi]
