@@ -1,4 +1,4 @@
-Team: 
+Team: 9
 1- Gudjon Magnusson
 2- Irina Yakubinskaya
 3-
@@ -9,8 +9,8 @@ irinya@terpmail.umd.edu
 ---------------------------------------------------------------------------------
 Part 1)
 
-1- baseline accuracy = ?%
-2- Cohen’s Kappa = ?
+1- baseline accuracy = 55.54% (for dev set) 
+2- Cohen’s Kappa = 0.796  #17 examples were annotated correctly
 
 ---------------------------------------------------------------------------------
 Part 2)
