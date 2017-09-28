@@ -64,20 +64,3 @@ class LeskFeature():
 
 		return np.array(X)
 
-	"""
-	def get_feature(self, example):
-		X = ([0] * len(self.labels))+[1]
-
-		for word in example:
-
-			for c in self.classes:
-				class_index = self.labels.index(c)
-				definition = self.texts[class_index]
-				
-				if word in definition:
-					word_index = self.vocab.index(word)
-					X[class_index] += self.word_weights[word_index, class_index]
-
-		return np.array(X).transpose()
-	"""
-

@@ -75,49 +75,60 @@ To classify a new example we first generate the feature vector and the app end a
 ---------------------------------------------------------------------------------
 Part 3)
 
-1- 
-W_text
-.:1, ``:1, her:1, with:1, plucky':1, an:1, to:1, plank:1, jacques:1, last:1, by:1, line:1, tied:1, painting:1, sits:1, drawing:1, another:1, the:1, quoted:1, not:1, shows:1, friend:1, lady:1, a:1, madame:1, room:1, before:1, ,:1, dog:1, in:1, down:1, managed:1, did:1, french:1, little:1, rolland:1, !:1, exquisite:1, harp:1, pet:1, ah:1, liberty:1, she:1, and:1, of:1, hauer:1, lafayette:1, who:1, wordsworth:1
-W_cord
-.:-1, ``:-1, her:-1, with:-1, plucky':-1, an:-1, to:-1, plank:-1, jacques:-1, last:-1, by:-1, line:-1, tied:-1, painting:-1, sits:-1, drawing:-1, another:-1, the:-1, quoted:-1, not:-1, shows:-1, friend:-1, lady:-1, a:-1, madame:-1, room:-1, before:-1, ,:-1, dog:-1, in:-1, down:-1, managed:-1, did:-1, french:-1, little:-1, rolland:-1, !:-1, exquisite:-1, harp:-1, pet:-1, ah:-1, liberty:-1, she:-1, and:-1, of:-1, hauer:-1, lafayette:-1, who:-1, wordsworth:-1
+1- ._cord: -1.0, ._text: 1.0, ``_cord: -1.0, ``_text: 1.0, her_cord: -2.0, her_text: 2.0, with_cord: -1.0, with_text: 1.0, plucky_cord: -1.0, plucky_text: 1.0, an_cord: -1.0, an_text: 1.0, to_cord: -2.0, to_text: 2.0, plank_cord: -1.0, plank_text: 1.0, jean-jacques_cord: -1.0, jean-jacques_text: 1.0, last_cord: -1.0, last_text: 1.0, by_cord: -1.0, by_text: 1.0, line_cord: -1.0, line_text: 1.0, tied_cord: -1.0, tied_text: 1.0, painting_cord: -1.0, painting_text: 1.0, sits_cord: -1.0, sits_text: 1.0, drawing_cord: -1.0, drawing_text: 1.0, another_cord: -1.0, another_text: 1.0, the_cord: -2.0, the_text: 2.0, much-quoted_cord: -1.0, much-quoted_text: 1.0, not_cord: -1.0, not_text: 1.0, shows_cord: -1.0, shows_text: 1.0, friend_cord: -1.0, friend_text: 1.0, lady_cord: -1.0, lady_text: 1.0, a_cord: -1.0, a_text: 1.0, madame_cord: -1.0, madame_text: 1.0, room_cord: -1.0, room_text: 1.0, before_cord: -1.0, before_text: 1.0, ,_cord: -3.0, ,_text: 3.0, dog_cord: -1.0, dog_text: 1.0, in_cord: -1.0, in_text: 1.0, down_cord: -1.0, down_text: 1.0, managed_cord: -1.0, managed_text: 1.0, did_cord: -1.0, did_text: 1.0, french_cord: -1.0, french_text: 1.0, little_cord: -1.0, little_text: 1.0, rolland_cord: -1.0, rolland_text: 1.0, !_cord: -1.0, !_text: 1.0, exquisite_cord: -1.0, exquisite_text: 1.0, harp_cord: -1.0, harp_text: 1.0, pet_cord: -1.0, pet_text: 1.0, ah_cord: -1.0, ah_text: 1.0, liberty_cord: -1.0, liberty_text: 1.0, she_cord: -1.0, she_text: 1.0, and_cord: -1.0, and_text: 1.0, of_cord: -1.0, of_text: 1.0, hauer_cord: -1.0, hauer_text: 1.0, lafayette_cord: -1.0, lafayette_text: 1.0, who_cord: -1.0, who_text: 1.0, wordsworth_cord: -1.0, wordsworth_text: 1.0
 
-2- comma separated accuracies (e.g. 30,35,60): 
-0.8949, 0.9304, 0.9721
+2- comma separated accuracies (e.g. 30,35,60):  0.8949, 0.9304, 0.9721
 
 3- classifier f-measures on the test set:
 micro averaged = 0.8347
 macro averaged = 0.7408
+
 4- 
+The feature used is a binary vector with length equal to the size of the vocabulary plus bias set to 1. The ith entry counts the number of times word_i is present in the sample X, zero otherwise. 
+For each class (sense of word to be disambiguated) we create a weight vector with length equal to the vocabulary plus one. All values set to zero.
+We build our prediction for class by taking the maximum out of dot products between feature vector and each weight vector. We compare prediction with golden label and if prediction is correct, we do nothing. If prediction is wrond we update weight vector. At each iteration we add new weight vector to the weight vector at previous step. It will be used for averaging.
+At the end of training the final weight is calculated by averaging over all update steps.
 ---------------------------------------------------------------------------------
 Part 4)
 A) Feature A:
 
 1- Description
+This feature is based on BOW but the dimensions are reduced by using principal component analysis.
+The roughly 15k dimensions are projected down to a 500 dimension feature space. This is implemented using singular value decomposition.
+Unfortunately this takes a very long time to compute and the results are not impressive.
+Another problem with this feature is that it removes any notion of counts or probabilities. The features are just coordinates in some abstract space. This does not work well for naive bayes.
 
 2- naive-bayes f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.08026
+macro averaged = 0.02476
 
 3- perceptron f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.7929
+macro averaged = 0.6682
 
 
 4- Conclusions:
+With more time to tweak and a faster implementation this might be a good feature to use for the perception, but does not seam like a good choice for naive beyes.
 
 B) Feature B:
 
 1- Description
+The idea for this one was to use the count of word overlap with the dictionary definition of each of the senses. 
+Definitions were gathered from the dictionary provided by Google. The definitions includes descriptions, synonyms and examples.
+At first we used only 6 features, the total number of words that occurred in the example and each definition. We also tried scaling the weight of each word by how common it was. This did work very well.
+In the end we used a BOW feature but with a reduced vocabulary with only words in the definition, 385 words in total.
+Its not as good using the full vocabulary, but its extremely fast.
 
 2- naive-bayes f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.7191011235955056
+macro averaged = 0.54655630081013795
 
 3- perceptron f-measures on the test set:
-micro averaged = 
-macro averaged = 
-
+micro averaged = 0.7143
+macro averaged = 0.5535
 
 4- Conclusions:
+This implementation did not produce a very good feature but with some smart tweaking it might be good.
+The speed is nice.
 
 
