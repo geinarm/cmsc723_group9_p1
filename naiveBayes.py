@@ -4,12 +4,10 @@ import math
 from bowfeature import BOWFeature
 
 class NaiveBayes:
-	def __init__(self, train_x, train_y):
+	def __init__(self, feature, classes):
 
-		self.feature_function = BOWFeature(train_x, train_y)
-		self.vocabulary = self.feature_function.vocab
-
-		self.classes = list(set(train_y))
+		self.feature_function = feature #BOWFeature(train_x, train_y)
+		self.classes = classes #list(set(train_y))
 
 
 	def train(self, train_x, train_y):
@@ -17,10 +15,10 @@ class NaiveBayes:
 
 		## Count feature(words) occurences
 		n = len(train_x)
-		k = self.feature_function.size() #len(self.vocabulary)
+		k = self.feature_function.size()
 		count_matrix = np.array([ ([0]*len(self.classes)) for _ in xrange(0, k)])
+		count_matrix = np.asfarray(count_matrix)
 		class_count = [0] * len(self.classes)
-		print(count_matrix.shape)
 
 		for i in xrange(0, n):
 			if(i % 300 == 0):
@@ -36,10 +34,9 @@ class NaiveBayes:
 			count_matrix[:, y] += x
 			
 		count_matrix = np.delete(count_matrix, k-1, 0)	# remove count of bias element
-		count_matrix = np.asfarray(count_matrix)		# convert to float just to be sure
 
-		print('Sum2 :')
-		print(np.sum(count_matrix))
+
+		print(count_matrix)
 
 		## Calculate probability
 		self.weights = []
@@ -61,11 +58,12 @@ class NaiveBayes:
 		## Hack
 		if self.feature_function.__class__.__name__ == 'BOWFeature':
 			self.feature_function.binary = True
+		elif self.feature_function.__class__.__name__ == 'LeskFeature':
+			self.feature_function.binary = True
 
 		#X = self.get_bow_vector(tokens)
 		X = self.feature_function.get_feature(example)
 		X = np.clip(X, 0, 1)  ## binary feature. Ignore count
-		#X = np.append(X, 1)
 
 		score = [0] * len(self.classes)
 		for i in xrange(0, len(self.classes)):

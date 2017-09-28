@@ -6,8 +6,6 @@ class BOWFeature():
 
 		self.classes = list(set(train_y))
 		self.vocab = list(set([item for l_ in train_x for item in l_]))
-		self.num_classes = len(self.classes)
-		self.N = len(train_y)
 		self.K = len(self.vocab)
 		self.binary = binary
 

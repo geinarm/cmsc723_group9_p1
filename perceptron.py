@@ -11,6 +11,8 @@ class Perceptron:
 		## Hack
 		if self.feature_function.__class__.__name__ == 'BOWFeature':
 			self.feature_function.binary = True
+		elif self.feature_function.__class__.__name__ == 'LeskFeature':
+			self.feature_function.binary = True
 
 
 	def train(self, train_x, train_y):
@@ -22,7 +24,7 @@ class Perceptron:
 		self.weights = np.asfarray(self.weights)
 		weights_sum = self.weights.copy()
 
-		for j in xrange(0, 1):
+		for j in xrange(0, 3): 		## Itterations
 			print("Itteration {0}".format(j+1))
 			for i in xrange(0, len(train_y)):
 				if(i % 300 == 0):

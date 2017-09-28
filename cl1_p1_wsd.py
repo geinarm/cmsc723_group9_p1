@@ -3,6 +3,11 @@ CMSC723 / INST725 / LING723 -- Fall 2016
 Project 1: Implementing Word Sense Disambiguation Systems
 """
 
+from perceptron import Perceptron
+from bowfeature import BOWFeature
+from pcafeature import PCAFeature
+from leskfeature import LeskFeature
+
 
 """
  read one of train, dev, test subsets 
@@ -10,9 +15,9 @@ Project 1: Implementing Word Sense Disambiguation Systems
  subset - one of train, dev, test
  
  output is a tuple of three lists
- 	labels: one of the 6 possible senses <cord, division, formation, phone, product, text >
- 	targets: the index within the text of the token to be disambiguated
- 	texts: a list of tokenized and normalized text input (note that there can be multiple sentences)
+	labels: one of the 6 possible senses <cord, division, formation, phone, product, text >
+	targets: the index within the text of the token to be disambiguated
+	texts: a list of tokenized and normalized text input (note that there can be multiple sentences)
 
 """
 import nltk 
@@ -74,7 +79,15 @@ import numpy as np
 def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 
-	NB = NaiveBayes(train_texts, train_labels)
+
+	classes = list(set(train_labels))
+
+	feature = LeskFeature(classes)
+	#feature = BOWFeature(train_texts, train_labels)
+	#feature = PCAFeature(train_texts, train_labels, 500)
+	#feature = CleverFeature(train_texts, train_labels)
+
+	NB = NaiveBayes(feature, classes)
 	NB.train(train_texts, train_labels)
 
 	gold = []
@@ -96,16 +109,16 @@ train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 
 """
-from perceptron import Perceptron
-from bowfeature import BOWFeature
-from pcafeature import PCAFeature
 import numpy as np
 def run_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 	
-	feature = BOWFeature(train_texts, train_labels)
-	#feature = PCAFeature(train_texts, train_labels, 500)
 	classes = list(set(train_labels))
+
+	feature = LeskFeature(classes)
+	#feature = BOWFeature(train_texts, train_labels)
+	#feature = PCAFeature(train_texts, train_labels, 500)
+	#feature = CleverFeature(train_texts, train_labels)
 
 	percept = Perceptron(feature, classes)
 	percept.train(train_texts, train_labels)
@@ -157,19 +170,17 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
 
 
 if __name__ == "__main__":
-    # reading, tokenizing, and normalizing data
-    train_labels, train_targets, train_texts = read_dataset('train')
-    dev_labels, dev_targets, dev_texts = read_dataset('dev')
-    test_labels, test_targets, test_texts = read_dataset('test')
+	# reading, tokenizing, and normalizing data
+	train_labels, train_targets, train_texts = read_dataset('train')
+	dev_labels, dev_targets, dev_texts = read_dataset('dev')
+	test_labels, test_targets, test_texts = read_dataset('test')
 
-    #running the classifier
-    #test_scores = run_naivebayes_classifier(train_texts, train_targets, train_labels, 
-	#			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+	## running the classifier
 
-    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
-				dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+	#test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
+	#           dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
-    #test_scores = run_bow_perceptron_classifier(train_texts, train_targets, train_labels, 
-	#		dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+	test_scores = run_bow_perceptron_classifier(train_texts, train_targets, train_labels, 
+			dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
-    print test_scores
+	print test_scores
