@@ -81,6 +81,10 @@ Part 3)
 micro averaged = 
 macro averaged = 
 4- 
+The feature used is a binary vector with length equal to the size of the vocabulary plus bias set to 1. The ith entry counts the number of times word_i is present in the sample X, zero otherwise. 
+For each class (sense of word to be disambiguated) we create a weight vector with length equal to the vocabulary plus one. All values set to zero.
+We build our prediction for class by taking the maximum out of dot products between feature vector and each weight vector. We compare prediction with golden label and if prediction is correct, we do nothing. If prediction is wrond we update weight vector. At each iteration we add new weight vector to the weight vector at previous step. It will be used for averaging.
+After each iteration through the set we calculate averages for our weight vector and apply it for our next iteration.
 ---------------------------------------------------------------------------------
 Part 4)
 A) Feature A:
