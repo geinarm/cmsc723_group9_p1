@@ -82,6 +82,8 @@ W_cord
 .:-1, ``:-1, her:-1, with:-1, plucky':-1, an:-1, to:-1, plank:-1, jacques:-1, last:-1, by:-1, line:-1, tied:-1, painting:-1, sits:-1, drawing:-1, another:-1, the:-1, quoted:-1, not:-1, shows:-1, friend:-1, lady:-1, a:-1, madame:-1, room:-1, before:-1, ,:-1, dog:-1, in:-1, down:-1, managed:-1, did:-1, french:-1, little:-1, rolland:-1, !:-1, exquisite:-1, harp:-1, pet:-1, ah:-1, liberty:-1, she:-1, and:-1, of:-1, hauer:-1, lafayette:-1, who:-1, wordsworth:-1
 
 2- comma separated accuracies (e.g. 30,35,60): 
+0.8949, 0.9304, 0.9721
+
 3- classifier f-measures on the test set:
 micro averaged = 0.8347
 macro averaged = 0.7408

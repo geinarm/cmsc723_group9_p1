@@ -35,11 +35,11 @@ class NaiveBayes:
 			
 
 		## Q2 - 1
-		print(self.classes)
+		#print(self.classes)
 		#print(class_count)
-		print("C(Si | time) = {0}".format(count_matrix[994, :]))
-		print("C(s_i | loss) = {0}".format(count_matrix[7596, :]))
-		print("C(s_i | export) = {0}".format(count_matrix[159, :]))
+		#print("C(Si | time) = {0}".format(count_matrix[994, :]))
+		#print("C(s_i | loss) = {0}".format(count_matrix[7596, :]))
+		#print("C(s_i | export) = {0}".format(count_matrix[159, :]))
 		count_matrix = np.delete(count_matrix, k-1, 0)	# remove count of bias element
 
 		## Calculate probability
